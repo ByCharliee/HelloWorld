@@ -1,9 +1,5 @@
 
 fun main(){
-
-    pri
-    nt("Esta es la nueva línea de código")
-
     var opcion: Int
     do{
         val entrada = entradaUsuario()
