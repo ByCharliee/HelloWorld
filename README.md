@@ -1,1 +1,1 @@
-Creando mi primer repositorio que almacena una aplicación simple que simula un chatbot 
+Creando mi primer repositorio que almacena ejercicios simples para principiantes en la programación, aún se puede ver que el código no es para nada elegante y mejorable, estaré posetando actualizaciones conforme avence en mis conocimientos, por ahora solo serán programas sencillos. 
