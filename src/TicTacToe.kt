@@ -1,9 +1,8 @@
 import kotlin.math.absoluteValue
 
 /*
-* El juego acepta 9 caracteres de intrada con las jugadas de la partida. Las entradas deben ser X, O, _, usando el guió bajo para los espacios vaciós
-* */
-
+* El juego ahora acepta que los jugadores inserten sus jugadas hasta que haya un ganador o hasta que se termine el juego en empate
+ */
 fun main() {
     var cont = 0
     var x =1
