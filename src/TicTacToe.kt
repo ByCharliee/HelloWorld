@@ -1,41 +1,86 @@
 import kotlin.math.absoluteValue
 
+/*
+* El juego acepta 9 caracteres de intrada con las jugadas de la partida. Las entradas deben ser X, O, _, usando el guió bajo para los espacios vaciós
+* */
+
 fun main() {
-    val juego = readln()
-    val matriz = convertirMatriz(juego)
-    val tablero = """
-        > $juego
+    var cont = 0
+    var x =1
+    var y =1
+    var juego = ' '
+    var estado :String?
+    val matriz = generarMatriz()  //Generamos el tablero y dentro del ciclo se modifica la matriz dependiendo de las jugadas
+    do{
+
+
+        if (cont > 0){
+            matriz[x-1][y-1] = juego
+        }
+
+
+        val tablero = """
+       
         _________
         | ${matriz[0].joinToString(" ")} |
         | ${matriz[1].joinToString(" ")} |
         | ${matriz[2].joinToString(" ")} |
         _________
-    """
-    println(tablero)
+        """
+        println(tablero)
+
+        //Evaluamos el estado del juego, si aún no hay ganador se siguen insertando jugadas
+        estado=analizarJuego(matriz)
+        if (estado != null){
+            println(estado)
+            break
+        }
+
+        //Verificamos que las coordenadas sean válidas
+        var flag = false
+        println("Ingresa las coordenadas (x,y): ")
+        do{
+
+            x = readln().toInt()
+            y = readln().toInt()
+            if (x>3 || y>3 || x<=0 || y<=0) println("Ingresa coordenadas válidas. Números del 1 al 3: ")
+            else flag = true
+        }while(!flag)
+
+        //Verificamos que el turno sea válido
+        flag = false
+        var juegoAnterior = juego
+        println("Marca de jugador (X / O): ")
+        do{
+            juego = readln().get(0).uppercaseChar()
+            if (juego != 'X' && juego != 'O') {
+                println("Ingrese caracter válido. Solo se permite 'O' y 'X': ")
+            }
+            else if(juego == juegoAnterior){
+                println("Ya has jugado dos veces. Sigue el turno del contario")
+            }
+            else flag = true
+        }while (!flag)
+
+        cont++
 
 
-    println( analizarJuego(matriz))
+    }while (cont < 9)
 
-
-
-
+    if(cont==9) println("El resultado es un empate")
 
 }
 
 
-//Convertir la cadena en una matriz 3x3
-fun convertirMatriz(cad: String): MutableList<MutableList<Char>>{
+
+//Generar una matriz 3x3
+fun generarMatriz(): MutableList<MutableList<Char>>{
     val lista: MutableList<MutableList<Char>> = mutableListOf()
-    var cont = 0
 
     for (i in 0..2){
         lista.add(mutableListOf())
         for (j in 0..2){
-
-            var car = cad[cont]
-            lista[i].add(car)
-            cont++
-
+            lista[i].add('-')
         }
     }
 
@@ -44,58 +89,29 @@ fun convertirMatriz(cad: String): MutableList<MutableList<Char>>{
 
 
 //Analizamos la partida
-fun analizarJuego(mat: MutableList<MutableList<Char>>): String{
+fun analizarJuego(mat: MutableList<MutableList<Char>>): String?{
 
-    var result = 'z'//Valor de control
-    var cont = 0 //para verificar que solo haya un ganador
-    var x = 0
-    var o = 0
+    var result = mutableListOf<Char>()
 
-    //revisar que exista el número correcto de O y X
-    for (i in mat.indices){
-        for (j in mat.indices){
-            if (mat[i][j] == 'X')x++
-            if (mat[i][j] == 'O')o++
-
-        }
-    }
-
-    if ((x-o).absoluteValue > 1) return "Imposible"
-
+    //Ya no se necesita el control sobre el número correcto de 'O' y 'X'
 
     //Verificamos las filas, columnas y diagonales
-    if((mat[0][0] == mat[0][1]) && (mat[0][0] == mat[0][2])) {result=mat[0][0]; cont++}
-    if((mat[1][0] == mat[1][1]) && (mat[1][0] == mat[1][2])) {result=mat[1][0]; cont++}
-    if((mat[2][0] == mat[2][1]) && (mat[2][0] == mat[2][2])) {result=mat[2][0]; cont++}
-    if((mat[0][0] == mat[1][0]) && (mat[0][0] == mat[2][0])) {result=mat[0][0]; cont++}
-    if((mat[0][1] == mat[1][1]) && (mat[0][1] == mat[2][1])) {result=mat[0][1]; cont++}
-    if((mat[0][2] == mat[1][2]) && (mat[0][2] == mat[2][2])) {result=mat[0][2]; cont++}
-    if((mat[0][0] == mat[1][1]) && (mat[0][0] == mat[2][2])) {result=mat[0][0]; cont++}
-    if((mat[0][2] == mat[1][1]) && (mat[0][2] == mat[2][0])) {result=mat[0][0]; cont++}
+    if((mat[0][0] == mat[0][1]) && (mat[0][0] == mat[0][2])) result.add(mat[0][0])
+    if((mat[1][0] == mat[1][1]) && (mat[1][0] == mat[1][2])) result.add(mat[1][0])
+    if((mat[2][0] == mat[2][1]) && (mat[2][0] == mat[2][2])) result.add(mat[2][0])
+    if((mat[0][0] == mat[1][0]) && (mat[0][0] == mat[2][0])) result.add(mat[0][0])
+    if((mat[0][1] == mat[1][1]) && (mat[0][1] == mat[2][1])) result.add(mat[0][1])
+    if((mat[0][2] == mat[1][2]) && (mat[0][2] == mat[2][2])) result.add(mat[0][2])
+    if((mat[0][0] == mat[1][1]) && (mat[0][0] == mat[2][2])) result.add(mat[0][0])
+    if((mat[0][2] == mat[1][1]) && (mat[0][2] == mat[2][0])) result.add(mat[0][2])
 
 
-    //verficar solo un ganador
-    if (cont >= 2) return "Imposible"
+   //Ya no necesitamos verificar que haya solo un ganador
 
-
-    if (result == 'z'){
-        //revisamos que el juego ya esté terminado
-        for (i in mat.indices){
-            if (mat[i].contains('_')){
-                return "Juego aún no terminado"
-            }
-
-        }
-
-        //Si ya está terminado y no hay ganador entonces es un empate
-        return "Empate"
-
+    for (i in result.indices){
+        if(result[i] != '-') return "${result[i]} es el ganador"
     }
-
-    return "$result ganó la partida"
-
-
-
+    return null
 
 }
 
